@@ -1,0 +1,160 @@
+#use <string>
+#use <conio>
+#use <string>
+#use <util>
+
+struct fraction_s {
+    int z;
+    int d;
+};
+
+typedef struct fraction_s fraction_s;
+
+typedef fraction_s* fraction;
+
+string string_fromfrac(fraction f) {
+    if (f->d == 1) {
+        return string_fromint(f->z);
+    } else {
+        if (f->d < 0) { 
+            f->d *= -1;
+            f->z *= -1;
+        }
+        return format("(%d/%d)", f->z, f->d);
+    }
+}
+
+void printfrac(fraction f) {
+    print(string_fromfrac(f));
+}
+
+int gcd(int a, int b)
+{
+    if (a == 0)
+        return b;
+    return gcd(b%a, a);
+}
+
+void lowest(fraction f)
+{
+    // printfrac(f);
+    f->d = f->d == 0 ? 1 : f->d;
+    // Finding gcd of both terms
+    int common_factor = gcd(f->z,f->d);
+ 
+    // Converting both terms into simpler
+    // terms by dividing them by common factor
+    f->d = f->d/common_factor;
+    f->z = f->z/common_factor;
+}
+
+fraction frac(int z, int d)
+{
+    fraction result = alloc(fraction_s);
+    result->z = z;
+    result->d = d;
+    lowest(result);
+    return result;
+}
+
+fraction frac_add(fraction a, fraction b) {
+    fraction result = alloc(fraction_s);
+    // Finding gcd of den1 and den2
+    result->d = gcd(a->d,b->d);
+    // Denominator of final fraction obtained
+    // finding LCM of den1 and den2
+    // LCM * GCD = a * b
+    result->d = (a->d*b->d) / result->d;
+    result->z = (a->z)*(result->d/a->d) + (b->z)*(result->d/b->d);
+    // into it's simplest form
+    lowest(result);
+    return result;
+}
+
+fraction frac_multiply(fraction a, fraction b) {
+    fraction result = alloc(fraction_s);
+    result->z = a->z * b->z;
+    result->d = a->d * b->d;
+    lowest(result);
+    return result;
+}
+
+fraction frac_divide(fraction a, fraction b) {
+    fraction result = alloc(fraction_s);
+    result->z = a->z * b->d;
+    result->d = a->d * b->z;
+    lowest(result);
+    return result;
+}
+
+fraction frac_negative(fraction f) {
+    fraction f_neg = alloc(fraction_s);
+    f_neg->z = f->z*-1;
+    f_neg->d = f->d;
+    lowest(f_neg);
+    return f_neg;
+}
+
+fraction frac_subtract(fraction a, fraction b) {
+    return frac_add(a, frac_negative(b));
+}
+
+fraction abs_f(fraction f) {
+    f->z = abs(f->z); 
+    f->d = abs(f->d); 
+    lowest(f);
+    return f;
+}
+
+int pow_n_int(int x, int n) {
+    int r = 1;
+    for (int i = 0; i < n; i++) {
+        r *= x;
+    }
+    return r;
+}
+
+fraction pow_n_frac(fraction x, int n) {
+    fraction res = frac(1, 1);
+    for (int i = 0; i < n; i++) {
+        res = frac_multiply(res, x);
+    }
+    return res;
+}
+
+bool frac_equal(fraction a, fraction b) {
+    lowest(a); lowest(b);
+    return a->z == b->z && a->d == b->d;
+}
+
+bool frac_grt(fraction l, fraction r)
+{
+    int z = l->z*r->d - l->d*r->z;
+    if (z == 0)
+        return false;
+    else if (z > 0)
+        return true;
+    else
+        return false;
+}
+
+bool frac_lst(fraction l, fraction r)
+{
+    int z = l->z*r->d - l->d*r->z;
+    if (z == 0)
+        return false;
+    else if (z > 0)
+        return false;
+    else
+        return true;
+}
+
+bool frac_equal_by(fraction a, fraction b, fraction diff) {
+    lowest(a); lowest(b);
+    return frac_lst(abs_f(frac_subtract(a, b)), diff) && frac_lst(abs_f(frac_subtract(a, b)), diff);
+}
+
+fraction round(fraction x, int n) {
+    fraction m = frac_multiply(x, frac(pow_n_int(10, n), 1));
+    return frac(m->z / m->d, pow_n_int(10, n));
+}

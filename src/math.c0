@@ -1,11 +1,20 @@
 #use <string>
 #use <util>
 #use <conio>
+#use "fractions.c0"
 
-int pow_n(int x, int n) {
-    int r = 1;
-    for (int i = 0; i < n; i++) {
-        r *= x;
+fraction sqrt(fraction x) {
+    fraction sqrt = frac_divide(x, frac(2, 1));
+    fraction temp = frac(0, 1);
+    while (!frac_equal_by(sqrt, temp, frac(1, 10))) {
+        temp = sqrt;
+        sqrt = frac_divide(frac_add(frac_divide(x, temp), temp), frac(2, 1));
     }
-    return r;
+    return round(sqrt, 2);
+}
+
+int main() {
+    printfrac(sqrt(frac(8,1)));
+    println("");
+    return 0;
 }
