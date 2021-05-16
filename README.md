@@ -1,5 +1,4 @@
-# c0-libraries
-Self-Made libraries for C0
+# Erst hier lesen!
 
 Ich empfehle keinem, Code von hier für die Uni-Aufgaben zu kopieren, da:
  - Ihr sowieso einen Plagiatsvorwurf bekommt.
