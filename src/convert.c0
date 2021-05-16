@@ -1,0 +1,60 @@
+#use <string>
+#use <util>
+#use <conio>
+// local
+#use "math.c0"
+
+char[] nums() {
+    char[] r = alloc_array(char, 10);
+    r[0] = '0';
+    r[1] = '1';
+    r[2] = '2';
+    r[3] = '3';
+    r[4] = '4';
+    r[5] = '5';
+    r[6] = '6';
+    r[7] = '7';
+    r[8] = '8';
+    r[9] = '9';
+    return r;
+}
+
+bool contains(char[] cs, int l, char c) {
+    bool res = false;
+    for (int i = 0; i < l; i++) {
+        res = res || c == cs[i];
+    }
+    return res;
+}
+
+int int_fromchar(char c) {
+    char[] n = nums();
+    if (!contains(n, 10, c)) {
+        return c == '-' ? -1 : 0;
+    }
+    for (int i = 0; i < 10; i++) {
+        if (c == n[i]) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+int int_fromstring(string s) {
+    int res = 0;
+    int l = string_length(s);
+    int p = 0;
+    for (int i = 1; i <= l; i++) {
+        res += int_fromchar(string_charat(s, l - i)) * pow_n(10, p);
+        p += contains(nums(), 10, string_charat(s, l - i)) ? 1 : 0;
+    }
+    return res;
+}
+
+int[] intarray_fromstringarray(string[] s, int l) {
+    int[] res = alloc_array(int, l);
+    for (int i = 0; i < l; i++) {
+        res[i] = int_fromstring(s[i]);
+    }
+    return res;
+}

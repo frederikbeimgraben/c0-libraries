@@ -1,0 +1,20 @@
+#use <string>
+#use <util>
+#use <conio>
+// local
+#use "math.c0"
+#use "convert.c0"
+#use "strings.c0"
+
+int[][] intmatrix_fromstring(string s, int* n, int* m) {
+    string[] rows = split(s, '|', n);
+    int[][] res = alloc_array(int[], *n);
+    for (int l = 0; l < *n; l++) {
+        string[] columns = split(rows[l], ',', m);
+        res[l] = alloc_array(int, *m);
+        for (int r = 0; r < *m; r++) {
+            res[l][r] = int_fromstring(columns[r]);
+        }
+    }
+    return res;
+}
