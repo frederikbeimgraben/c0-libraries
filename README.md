@@ -8,4 +8,4 @@ Ich empfehle keinem, Code von hier für die Uni-Aufgaben zu kopieren, da:
 
 Ich hoffe, ich habe mich da klar genug ausgedrückt.
 
-Wenn ihr aber unabhängig von der Informatik II spaß am programmieren habt, ermutige ich euch geradezu, euch den Code mal anzuschauen. 
+Wenn ihr aber unabhängig von der Informatik II Spaß am programmieren habt, ermutige ich euch geradezu, euch den Code mal anzuschauen. 
