@@ -2,6 +2,7 @@
 #use <conio>
 #use <string>
 #use <util>
+#use "strings.c0"
 
 struct fraction_s {
     int z;
@@ -157,4 +158,31 @@ bool frac_equal_by(fraction a, fraction b, fraction diff) {
 fraction round(fraction x, int n) {
     fraction m = frac_multiply(x, frac(pow_n_int(10, n), 1));
     return frac(m->z / m->d, pow_n_int(10, n));
+}
+
+string as_float(fraction f) {
+    int n = f->z;
+    while (f->z > 0 ? n * 10 < int_max()/10 :  n * 10 > int_min()/10) {
+        n *= 10;
+    }
+    n /= f->d;
+    while ((n / 10) * 10 == n) {
+        n /= 10;
+    }
+    int pos = (
+        string_length(string_fromint(f->z)) -
+        string_length(string_fromint(f->d/f->z))
+    );
+    string sn = string_fromint(n);
+    char[] cs = string_to_chararray(sn);
+    string out = "";
+    for (int i = 0; i < string_length(sn); i++) {
+        out = string_join(out, string_fromchar(cs[i]));
+        out = string_join(out, i+1 == pos ? "." : "");
+    }
+    return out;
+}
+
+void print_as_float(fraction f) {
+    print(as_float(f));
 }

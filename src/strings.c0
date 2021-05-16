@@ -1,6 +1,13 @@
 #use <string>
 #use <conio>
 
+/*
+Ich empfehle keinem, Code von hier für die Uni-Aufgaben zu kopieren, da:
+  -  Ihr sowieso einen Plagiatsvorwurf bekommt.
+  -  Der Code hier bei weitem nicht die beste Lösung für die Probleme auf den ÜBs ist.
+  -  Ihr dann offiziell ein ***** seid.
+*/
+
 // Replaces all occurences of a given `char o` with `char r` in the `string s`
 string replace(string s, char o, char r) {
     char[] carr = string_to_chararray(s);

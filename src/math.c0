@@ -3,6 +3,13 @@
 #use <conio>
 #use "fractions.c0"
 
+/*
+Ich empfehle keinem, Code von hier für die Uni-Aufgaben zu kopieren, da:
+  -  Ihr sowieso einen Plagiatsvorwurf bekommt.
+  -  Der Code hier bei weitem nicht die beste Lösung für die Probleme auf den ÜBs ist.
+  -  Ihr dann offiziell ein ***** seid.
+*/
+
 fraction sqrt(fraction x) {
     fraction sqrt = frac_divide(x, frac(2, 1));
     fraction temp = frac(0, 1);
@@ -13,8 +20,43 @@ fraction sqrt(fraction x) {
     return round(sqrt, 2);
 }
 
+fraction root(int n, fraction x) {
+    int FRC_EPSILON = 2;
+    fraction d = frac(1, 1);
+    fraction r = frac(1, 1);
+    if (frac_equal(x, frac(0, 1))) {
+        return frac(0, 1);
+    }
+    if (n < 1 || (frac_lst(x, frac(0, 1)) && !((n & 1) == 0))) {
+        return frac(0, 0); /* NaN */
+    }
+    int i = 0;
+    while ( !frac_equal(round(pow_n_frac(r, n), FRC_EPSILON), round(x, FRC_EPSILON)) && i < 50) {
+        d = frac_divide(
+            frac_subtract(
+                frac_divide(
+                    x,
+                    pow_n_frac(
+                        r,
+                        n - 1
+                    )
+                ),
+                r
+            ),
+            frac(n, 1)
+        );
+        r = round(frac_add(r, d), FRC_EPSILON);
+        i++;
+    }
+    return r;
+}
+
 int main() {
-    printfrac(sqrt(frac(8,1)));
+    print_as_float(root(3, frac(18,1)));println("");
+    print_as_float(frac(16,1)); println("");
+    print_as_float(frac(161,1)); println("");
+    print_as_float(frac(161,10)); println("");
+    print_as_float(frac(161,100)); println("");
     println("");
     return 0;
 }

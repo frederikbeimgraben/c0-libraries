@@ -6,6 +6,13 @@
 #use "convert.c0"
 #use "strings.c0"
 
+/*
+Ich empfehle keinem, Code von hier für die Uni-Aufgaben zu kopieren, da:
+  -  Ihr sowieso einen Plagiatsvorwurf bekommt.
+  -  Der Code hier bei weitem nicht die beste Lösung für die Probleme auf den ÜBs ist.
+  -  Ihr dann offiziell ein ***** seid.
+*/
+
 int[][] intmatrix_fromstring(string s, int* n, int* m) {
     string[] rows = split(s, '|', n);
     int[][] res = alloc_array(int[], *n);
