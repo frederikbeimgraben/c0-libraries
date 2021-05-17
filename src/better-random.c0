@@ -2,12 +2,6 @@
 #use <string>
 #use <conio>
 #use <clock>
-/*
-File for reading from /dev/random
-String to get charcodes
-conio for output of testing results
-clock for timing
-*/
 
 /*
 Ich empfehle keinem, Code von hier für die Uni-Aufgaben zu kopieren, da:
@@ -19,6 +13,10 @@ Ich empfehle keinem, Code von hier für die Uni-Aufgaben zu kopieren, da:
 //––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 // Author: Samuel Becker / MrEvilOnGitHub
 
+// Prototyping all functions available here (except main, because reasons)
+int randInt();
+char randChar();
+string randString(int length);
 
 int randInt() {
   /*
@@ -37,14 +35,44 @@ int randInt() {
   while (string_length(rand_string) < n) {
     rand_string = file_readline(random);
   }
-
+  // add once to not multiply with 0
   final += char_ord(string_charat(rand_string, 0));
+  // And now alternate between adding and multiplying to increase entropy
   for (int i=1; i < n; i++) {
     final = i%3==0 ? final * char_ord(string_charat(rand_string, i)) :
                     final + char_ord(string_charat(rand_string, i));
   }
   file_close(random);
   return final;
+}
+
+char randChar() {
+  /*
+  Output: a random char
+  Task: pull a the first character from /dev/random and return it
+  */
+  file_t random = file_read("/dev/random");
+  string rand_string = file_readline(random);
+  if (string_length(random) == 0) {
+    return '\n';
+  }
+  file_close(random);
+  return string_charat(rand_string, 0);
+}
+
+string randString(int length) {
+  /*
+  Input: length: The length of the string to output
+  Output: A string of length length
+  Task: Return a random string of length length
+  */
+  file_t random = file_read("/dev/random");
+  string final = file_readline(random);
+  while (string_length(final) < length) {
+    final = file_readline(random);
+  }
+  file_close(random);
+  return string_sub(final, 0, length-1);
 }
 
 void test(int n) {
