@@ -1,0 +1,97 @@
+#use <file>
+#use <string>
+#use <conio>
+#use <clock>
+
+/*
+Ich empfehle keinem, Code von hier für die Uni-Aufgaben zu kopieren, da:
+  -  Ihr sowieso einen Plagiatsvorwurf bekommt.
+  -  Der Code hier bei weitem nicht die beste Lösung für die Probleme auf den ÜBs ist.
+  -  Ihr dann offiziell ein ***** seid.
+*/
+
+//––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+// Author: Samuel Becker / MrEvilOnGitHub
+
+// Prototyping all functions available here (except main, because reasons)
+int randInt();
+char randChar();
+string randString(int length);
+
+int randInt() {
+  /*
+  Output: Random integer value
+  Task: Generate a random integer value
+  */
+  // Use of /dev/random is safe here b/c the only interaction happens via a
+  // UNIX system and those always contain this file
+  file_t random = file_read("/dev/random");
+  int final = 0; // Return value
+  int n = 16; // cap for chars used for the final result
+  string rand_string = file_readline(random);
+  // Don't go until the string we receive is long enough
+  // Can be too short b/c readline cuts strings at '\n' characters
+  // This mitigates this problem
+  while (string_length(rand_string) < n) {
+    rand_string = file_readline(random);
+  }
+  // add once to not multiply with 0
+  final += char_ord(string_charat(rand_string, 0));
+  // And now alternate between adding and multiplying to increase entropy
+  for (int i=1; i < n; i++) {
+    final = i%3==0 ? final * char_ord(string_charat(rand_string, i)) :
+                    final + char_ord(string_charat(rand_string, i));
+  }
+  file_close(random);
+  return final;
+}
+
+char randChar() {
+  /*
+  Output: a random char
+  Task: pull a the first character from /dev/random and return it
+  */
+  file_t random = file_read("/dev/random");
+  string rand_string = file_readline(random);
+  if (string_length(random) == 0) {
+    return '\n';
+  }
+  file_close(random);
+  return string_charat(rand_string, 0);
+}
+
+string randString(int length) {
+  /*
+  Input: length: The length of the string to output
+  Output: A string of length length
+  Task: Return a random string of length length
+  */
+  file_t random = file_read("/dev/random");
+  string final = file_readline(random);
+  while (string_length(final) < length) {
+    final = file_readline(random);
+  }
+  file_close(random);
+  return string_sub(final, 0, length-1);
+}
+
+void test(int n) {
+  int collector = 0;
+  int start = now();
+  for (int i=0; i < n; i++) {
+    collector += randInt();
+  }
+  int duration = now() - start;
+  printf("Average compute time: %d \n", duration);
+  printf("Average result %d during %d tests \n", collector/n, n);
+  printchar('\n');
+}
+
+int main() {
+  test(200000);
+  printf("Getting a random character: %c\n", randChar());
+  int n = 25;
+  printf("Getting a random string of length %d:\n", n);
+  println(randString(n));
+  return 0;
+}
