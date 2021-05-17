@@ -1,0 +1,65 @@
+#use <file>
+#use <string>
+#use <conio>
+#use <clock>
+/*
+File for reading from /dev/random
+String to get charcodes
+conio for output of testing results
+clock for timing
+*/
+
+/*
+Ich empfehle keinem, Code von hier für die Uni-Aufgaben zu kopieren, da:
+  -  Ihr sowieso einen Plagiatsvorwurf bekommt.
+  -  Der Code hier bei weitem nicht die beste Lösung für die Probleme auf den ÜBs ist.
+  -  Ihr dann offiziell ein ***** seid.
+*/
+
+//––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+// Author: Samuel Becker / MrEvilOnGitHub
+
+
+int randInt() {
+  /*
+  Output: Random integer value
+  Task: Generate a random integer value
+  */
+  // Use of /dev/random is safe here b/c the only interaction happens via a
+  // UNIX system and those always contain this file
+  file_t random = file_read("/dev/random");
+  int final = 0; // Return value
+  int n = 16; // cap for chars used for the final result
+  string rand_string = file_readline(random);
+  // Don't go until the string we receive is long enough
+  // Can be too short b/c readline cuts strings at '\n' characters
+  // This mitigates this problem
+  while (string_length(rand_string) < n) {
+    rand_string = file_readline(random);
+  }
+
+  final += char_ord(string_charat(rand_string, 0));
+  for (int i=1; i < n; i++) {
+    final = i%3==0 ? final * char_ord(string_charat(rand_string, i)) :
+                    final + char_ord(string_charat(rand_string, i));
+  }
+  file_close(random);
+  return final;
+}
+
+void test(int n) {
+  int collector = 0;
+  int start = now();
+  for (int i=0; i < n; i++) {
+    collector += randInt();
+  }
+  int duration = now() - start;
+  printf("Average compute time: %d \n", duration);
+  printf("Average result %d during %d tests \n", collector/n, n);
+  printchar('\n');
+}
+
+int main() {
+  test(200000);
+  return 0;
+}
