@@ -89,5 +89,9 @@ void test(int n) {
 
 int main() {
   test(200000);
+  printf("Getting a random character: %c\n", randChar());
+  int n = 25;
+  printf("Getting a random string of length %d:\n", n);
+  println(randString(n));
   return 0;
 }
