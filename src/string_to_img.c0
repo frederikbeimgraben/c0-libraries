@@ -1,0 +1,48 @@
+#use <conio>
+#use <img>
+#use <string>
+
+/*
+Ich empfehle keinem, Code von hier für die Uni-Aufgaben zu kopieren, da:
+  -  Ihr sowieso einen Plagiatsvorwurf bekommt.
+  -  Der Code hier bei weitem nicht die beste Lösung für die Probleme auf den ÜBs ist.
+  -  Ihr dann offiziell ein ***** seid.
+*/
+
+//––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+// Author: Samuel Becker / MrEvilOnGitHub
+
+// Prepare structurs
+struct pixel {
+  int transparency;
+  int red;
+  int green;
+  int blue;
+};
+typedef struct pixel* pixel_t;
+
+// Prototyping all functions available here (except main, because reasons)
+pixel_t pixelInt_to_pixelStruct(int pixel);
+int pixelStruct_to_pixelInt(pixel_t pixel);
+pixel_t[][] char_to_pixels(char character, int scale, int color);
+pixel_t[][] string_to_pixels(string text, int scale, int color);
+pixel_t[][] image_to_matrix(image_t image);
+image_t matrix_to_image(pixel_t[][] matrix);
+
+pixel_t pixelInt_to_pixelStruct(int pixel) {
+  pixel_t final = alloc(struct pixel);
+  final->transparency = (pixel >> 24) & 0x000000FF;
+  final->red = (pixel >> 16) & 0x000000FF;
+  final->green = (pixel >> 8) & 0x000000FF;
+  final->blue = pixel & 0x000000FF;
+  return final;
+}
+
+int pixelStruct_to_pixelInt(pixel_t pixel) {
+  int final = 0;
+  final |= pixel->transparency << 26;
+  final |= pixel->red << 16;
+  final |= pixel->green << 8;
+  final |= pixel->blue;
+  return final;
+}
