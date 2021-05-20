@@ -53,7 +53,7 @@ char randChar() {
   */
   file_t random = file_read("/dev/random");
   string rand_string = file_readline(random);
-  if (string_length(random) == 0) {
+  if (string_length(rand_string) == 0) {
     return '\n';
   }
   file_close(random);
